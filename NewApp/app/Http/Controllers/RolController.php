@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\RolResouce;
+use App\Models\Rol;
+use DB;
 
 class RolController extends Controller
 {
@@ -13,7 +16,8 @@ class RolController extends Controller
      */
     public function index()
     {
-        //
+        $rol = Rol::paginate(10);
+        return RolResouce::collection($rol);
     }
 
     /**
@@ -34,7 +38,13 @@ class RolController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rol = new Rol();
+        $rol->descripcion = $request->descripcion;
+
+        if($rol->save()){
+            return new RolResouce($rol);
+        }
+
     }
 
     /**
@@ -45,7 +55,8 @@ class RolController extends Controller
      */
     public function show($id)
     {
-        //
+        $rol = Rol::findOrFail($id);
+        return new RolResouce($rol);
     }
 
     /**
@@ -68,7 +79,13 @@ class RolController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $rol = Rol::findOrFail($id);
+        $rol->descripcion = $request->descripcion;
+
+
+        if($rol->save()){
+            return new RolResouce($rol);
+        }
     }
 
     /**
@@ -79,6 +96,9 @@ class RolController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $rol = Rol::findOrFail($id);
+        if($rol->delete()){
+            return new RolResouce($rol);
+        }
     }
 }

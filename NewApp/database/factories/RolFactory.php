@@ -22,7 +22,7 @@ class RolFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'descripcion'=>$this->faker->name,
         ];
     }
 }
