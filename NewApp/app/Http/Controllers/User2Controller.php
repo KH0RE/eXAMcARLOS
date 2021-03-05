@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Resources\User2Resouce;
 use App\Models\User2;
+
+use App\Models\Rol;
+
 use DB;
 
 class User2Controller extends Controller
@@ -16,8 +19,10 @@ class User2Controller extends Controller
      */
     public function index()
     {
-        $user = User2::paginate(10);
-        return User2Resouce::collection($user);
+        /*$user = User2::paginate(10);
+        return User2Resouce::collection($user);*/
+
+        return response()->json(User2::all(), 200);
 
     }
 
@@ -40,7 +45,8 @@ class User2Controller extends Controller
     public function store(Request $request)
 
     {
-        $user = new User2();
+        /* Enviar Datos por campos desde ela funcion  */
+       /* $user = new User2();
         $user->nombreUsuario = $request->nombreUsuario;
         $user->nombreCompleto = $request->nombreCompleto;
         $user->email = $request->email;
@@ -50,7 +56,13 @@ class User2Controller extends Controller
 
         if($user->save()){
             return new User2Resouce($user);
-        }
+        }*/
+
+        /* Otra forma de mandar datos method : POST*/
+        $user = User2::create($request->all());
+        return response($user, 201);
+
+
 
     }
 
@@ -62,8 +74,14 @@ class User2Controller extends Controller
      */
     public function show($id)
     {
-        $user = User2::findOrFail($id);
-        return new User2Resouce($user);
+       /* $user = User2::findOrFail($id);
+        return new User2Resouce($user);*/
+        //return response()->json(User2::findOrFail($id), 200);
+        $user = User2::find($id);
+        if(is_null($user)){
+            return response()->json(['message' =>'User Not Found'],400);
+        }
+        return response()->json($user::find($id),200);
     }
 
     /**
@@ -86,7 +104,8 @@ class User2Controller extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User2::findOrFail($id);
+        /* Enviar Datos  */
+      /*  $user = User2::findOrFail($id);
         $user->nombreUsuario = $request->nombreUsuario;
         $user->nombreCompleto = $request->nombreCompleto;
         $user->email = $request->email;
@@ -95,7 +114,15 @@ class User2Controller extends Controller
         $user->FechaNaci = $request->FechaNaci;
         if($user->save()){
             return new User2Resouce($user);
+        }*/
+
+        /* Actualizar por otro metodo  */
+        $user = User2::find($id);
+        if(is_null($user)){
+            return response()->json(['message'=> 'User Not Found'], 404);
         }
+        $user->update($request->all());
+            return response($user, 200);
     }
 
     /**
@@ -106,9 +133,16 @@ class User2Controller extends Controller
      */
     public function destroy($id)
     {
-        $user = User2::findOrFail($id);
+      /*  $user = User2::findOrFail($id);
         if($user->delete()){
             return new User2Resouce($user);
+        }*/
+
+        $user = User2::find($id);
+        if(is_null($user)) {
+            return response()->json(['message' => 'User Not Found'], 404);
         }
+        $user->delete();
+        return response()->json(null, 200);
     }
 }

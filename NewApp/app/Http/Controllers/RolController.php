@@ -16,8 +16,10 @@ class RolController extends Controller
      */
     public function index()
     {
-        $rol = Rol::paginate(10);
-        return RolResouce::collection($rol);
+       /* $rol = Rol::paginate(10);
+        return RolResouce::collection($rol);*/
+        return response()->json(Rol::all(), 200);
+
     }
 
     /**
@@ -38,12 +40,15 @@ class RolController extends Controller
      */
     public function store(Request $request)
     {
-        $rol = new Rol();
-        $rol->descripcion = $request->descripcion;
 
-        if($rol->save()){
-            return new RolResouce($rol);
-        }
+        $rol = Rol::create($request->all());
+        return response($rol, 201);
+        //$rol = new Rol();
+        //$rol->descripcion = $request->descripcion;
+
+        //if($rol->save()){
+          //  return new RolResouce($rol);
+        //}
 
     }
 
@@ -55,8 +60,13 @@ class RolController extends Controller
      */
     public function show($id)
     {
-        $rol = Rol::findOrFail($id);
-        return new RolResouce($rol);
+       /* $rol = Rol::findOrFail($id);
+        return new RolResouce($rol); */
+        $rol = Rol::find($id);
+        if(is_null($rol)){
+            return response()->json(['message'=>'User Not Foud'],400);
+        }
+        return response()->json(Rol::findOrFail($id), 200);
     }
 
     /**
@@ -79,14 +89,14 @@ class RolController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rol = Rol::findOrFail($id);
-        $rol->descripcion = $request->descripcion;
-
-
-        if($rol->save()){
-            return new RolResouce($rol);
+        $rol = Rol::find($id);
+        if(is_null($rol)){
+            return responde()->json(['message'=>'User Not Found'], 404);
         }
-    }
+
+        $rol->update($request->all());
+            return response ($rol,200);
+        }
 
     /**
      * Remove the specified resource from storage.
@@ -96,9 +106,11 @@ class RolController extends Controller
      */
     public function destroy($id)
     {
-        $rol = Rol::findOrFail($id);
-        if($rol->delete()){
-            return new RolResouce($rol);
-        }
+       $rol = Rol::find($id);
+       if(is_null($rol)){
+           return response()->json(['message' => 'User Not Found'],404);
+       }
+       $rol->delete();
+       return response()->json(null, 200);
     }
 }

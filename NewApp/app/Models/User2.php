@@ -10,6 +10,9 @@ class User2 extends Model
 
     use HasFactory;
 
+    public $timetamps = false;
+    protected $fillable = ['nombreUsuario', 'nombreCompleto', 'email', 'telefono', 'edad', 'rol'];
+
     public function configuracions () {
         return $this->hasOne('App\Configuracion')->withTimestamps();
     }

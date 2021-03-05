@@ -20,7 +20,7 @@ class CreateUser2sTable extends Migration
             $table->string('email')->nullable();
             $table->string('telefono')->nullable();
             $table->string('edad')->nullable();
-            $table->string('FechaNaci')->nullable();
+            $table->string('rol')->nullable();
 
             $table->unsignedBigInteger('configuracions_id')->unsigned()->nullable();
             $table->foreign('configuracions_id')->references('id')->on('configuracions')->onDelete('cascade')->onUpdate('cascade');
